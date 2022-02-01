@@ -1,3 +1,19 @@
+### Install
+mac:
+
+    brew install qmk/qmk/qmk
+    cd /Users/$USER/qmk_firmware/keyboards/gmmk/pro/ansi/keymaps
+    git clone https://github.com/aerodomigue/gmmk_pro_qmk.git
+    
+Build:
+    
+    qmk compile -kb gmmk/pro/ansi -km gmmk_pro_qmk -j 10
+    
+Output build:
+
+    cd /Users/$USER/qmk_firmware/.build/
+____
+
 # GMMK PRO (ANSI)
 
 A tenkeyless 75% keyboard made and sold by Glorious LLC. Equipped with the STM32 ARM Cortex-M4 microcontroller, with support for rotary encoders and three additional layouts. [More info at Glorious](https://www.pcgamingrace.com/products/glorious-gmmk-pro-75-barebone-black-reservation)
