@@ -48,7 +48,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // Since this is, among other things, a "gaming" keyboard, a key combination to enable NKRO on the fly is provided for convenience.
     // Press Fn+N to toggle between 6KRO and NKRO. This setting is persisted to the EEPROM and thus persists between restarts.
     [0] = LAYOUT(
-        KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_PSCR,          KC_MUTE,
+        KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_F13,          KC_MUTE,
         KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC,          KC_DEL,
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS,          KC_PGUP,
         KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,           KC_PGDN,
@@ -80,7 +80,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //  83, Side led 06    5, Ct_L     11,Win_L    17, Alt_L                              33, SPACE                              49, Alt_R    55, FN                    65, Ct_R     95, Left     97, Down      79, Right      84, Side led 17
 //  87, Side led 07                                                                                                                                                                                                        88, Side led 18
 //  91, Side led 08                                                                                                                                                                                                        92, Side led 19
-static int capsLedBlink[] = {3, 67, 68, 70, 71, 73, 74, 76, 77, 80, 81, 83, 84, 87, 88, 91, 92 };
+//static int capsLedBlink[] = {3, 67, 68, 70, 71, 73, 74, 76, 77, 80, 81, 83, 84, 87, 88, 91, 92 };
 
 
 #ifdef ENCODER_ENABLE
@@ -99,7 +99,7 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     
 	if (IS_HOST_LED_ON(USB_LED_CAPS_LOCK)) {
         
-        for (size_t keyLedIndex = 0; keyLedIndex < sizeof(capsLedBlink); keyLedIndex++)
+        for (int keyLedIndex = 0; keyLedIndex < 100; keyLedIndex++)
         {        
             // timer_elapsed() is a built-in function in qmk => it calculates in ms the time elapsed with timer_read()
             if (timer_elapsed(recording_timer) > 300) 
@@ -109,7 +109,7 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
             }
             if (isRecordingLedOn)
             {
-                RGB_MATRIX_INDICATOR_SET_COLOR(capsLedBlink[keyLedIndex], 0, 0, 0);
+                RGB_MATRIX_INDICATOR_SET_COLOR(keyLedIndex, 0, 0, 0);
             }
         }
     }
