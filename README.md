@@ -1,53 +1,115 @@
-### Install
-mac:
+# GMMK Pro Custom Keymap v1
 
-    brew install qmk/qmk/qmk
-    cd /Users/$USER/qmk_firmware/keyboards/gmmk/pro/ansi/keymaps
-    git clone https://github.com/aerodomigue/gmmk_pro_qmk.git
-    
-Build:
-    
-    qmk compile -kb gmmk/pro/ansi -km gmmk_pro_qmk -j 10
-    
-Output build:
+A highly customized QMK keymap for the GMMK Pro keyboard featuring advanced RGB lighting controls, macOS integration, and Linux compatibility features.
 
-    cd /Users/$USER/qmk_firmware/.build/
-____
+## Quick Install
 
-# GMMK PRO (ANSI)
+**macOS:**
+```bash
+brew install qmk/qmk/qmk
+cd /Users/$USER/qmk_firmware/keyboards/gmmk/pro/rev1/ansi/keymaps
+git clone https://github.com/aerodomigue/gmmk_pro_qmk.git v1
+```
 
-A tenkeyless 75% keyboard made and sold by Glorious LLC. Equipped with the STM32 ARM Cortex-M4 microcontroller, with support for rotary encoders and three additional layouts. [More info at Glorious](https://www.pcgamingrace.com/products/glorious-gmmk-pro-75-barebone-black-reservation)
+**Build:**
+```bash
+qmk compile -kb gmmk/pro/rev1/ansi -km v1 -j 10
+```
 
-* Keyboard Maintainer: [GloriousThrall](https://github.com/GloriousThrall)
-* Hardware Supported: GMMK Pro
-* Hardware Availability: [GloriousPCGaming.com](https://www.pcgamingrace.com/products/glorious-gmmk-pro-75-barebone-black-reservation)
+**Flash:**
+```bash
+qmk flash -kb gmmk/pro/rev1/ansi -km v1
+```
 
-Make example for this keyboard (after setting up your build environment):
+## Features
 
-    make gmmk/pro/ansi:default
+### 🖱️ **macOS Integration**
+- **Sleep Shortcut**: `Fn + Escape` - Instantly puts macOS to sleep using `Cmd+Opt+Eject`
+- Optimized for macOS workflow and system controls
 
-Flashing example for this keyboard:
+### ⌨️ **NKRO Toggle**
+- **NKRO Control**: `Fn + Print Screen` - Toggle between N-Key Rollover and 6-Key Rollover
+- **Visual Indicator**: Print Screen key shows current state when Fn is held:
+  - 🟢 **Green**: NKRO enabled (unlimited key rollover)
+  - 🟠 **Orange**: 6KRO enabled (6-key rollover for Linux compatibility)
+- Setting persists across power cycles
 
-    make gmmk/pro/ansi:default:flash
+### 🎮 **Virtual Numpad**
+When `Fn` is held, the right side of the keyboard becomes a numpad:
+```
+T Y U    →    7 8 9
+G H J    →    4 5 6
+V B N    →    1 2 3
+```
 
-To reset the board into bootloader mode, do one of the following:
+### 🎵 **Media Controls**
+- `Fn + A`: Previous track (🟢 Spring Green)
+- `Fn + S`: Play/Pause (🟡 Gold)
+- `Fn + D`: Next track (🟢 Spring Green)
+- `Fn + W`: Stop (🟡 Gold)
 
-* Hold the Reset switch mounted on the bottom side of the PCB while connecting the USB cable
-* Hold the Escape key while connecting the USB cable (also erases persistent settings)
-* Fn+Backslash will reset the board to bootloader mode if you have flashed the default QMK keymap
+### 🌈 **Advanced RGB Lighting**
 
-See the [build environment setup](https://docs.qmk.fm/#/getting_started_build_tools) and the [make instructions](https://docs.qmk.fm/#/getting_started_make_guide) for more information. Brand new to QMK? Start with our [Complete Newbs Guide](https://docs.qmk.fm/#/newbs).
+#### **RGB Controls via Rotary Encoder**
+| Modifier | Action | Effect |
+|----------|--------|---------|
+| `Shift + Knob` | Turn | Change RGB effect mode |
+| `Right Shift + Knob` | Turn | Adjust effect speed |
+| `Ctrl + Knob` | Turn | Adjust hue |
+| `Alt + Knob` | Turn | Adjust saturation |
+| `Ctrl + Alt + Knob` | Turn | Adjust brightness |
 
-## Case Screw Replacements
+#### **RGB Mode Switching via Knob Click**
+| Modifier | Click | Effect |
+|----------|-------|---------|
+| `Ctrl + Click` | Toggle | Switch between USER_SOLID_SIDE ↔ QMK_FANCY_ALL |
+| `Alt + Click` | Toggle | Switch between QMK_FANCY_SIDE ↔ QMK_FANCY_ALL |
+| `Shift + Click` | Toggle | RGB on/off |
+| `Right Ctrl + Click` | Save | Save current RGB settings to EEPROM |
 
-Many users report stripped case screws when disassembling the board.
+### 🔧 **Function Layer Visual Indicators**
 
-The stock case screws are:
-* Thread: M2
-* Thread length: ~5 mm
-* Head diameter: ~3.8 mm
-* Head counterbore diameter: ~4.0 mm
-* Head counterbore depth: ~1.9 mm
+When `Fn` is held, keys light up to show their function:
+- 🔵 **Blue**: Sleep key (Escape)
+- 🟣 **Magenta**: Bootloader key (Backslash)
+- 🔴 **Red**: RGB hue control (Left Shift)
+- 🟢 **Green**: RGB saturation control (Left Ctrl)
+- 🔵 **Blue**: RGB brightness control (Left Win)
+- 🩷 **Pink**: RGB speed control (Right Shift)
+- 🔵 **Azure**: Save RGB settings (Right Ctrl)
+- ⚪ **White**: Virtual numpad keys
+- 🟢/🟠 **Green/Orange**: NKRO status (Print Screen)
+
+### 🔒 **Caps Lock Indicator**
+- Entire Caps Lock row turns red when Caps Lock is active
+
+## Configuration
+
+### Enabled Features (rules.mk)
+```makefile
+VIA_ENABLE       = yes    # VIA compatibility for easy remapping
+EXTRAKEY_ENABLE  = yes    # Media keys and system controls
+NKRO_ENABLE      = yes    # N-Key Rollover support
+```
+
+## Compatibility
+
+- ✅ **macOS**: Full compatibility with sleep function and media keys
+- ✅ **Windows**: Standard functionality
+- ✅ **Linux**: NKRO toggle available for compatibility with systems that don't support N-Key Rollover
+
+## Bootloader Mode
+
+To reset the board into bootloader mode:
+* `Fn + Backslash` - Software reset to bootloader
+* Hold Reset switch on PCB bottom while connecting USB
+* Hold Escape while connecting USB (erases settings)
+
+---
+
+**Author**: aerodomigue  
+**License**: GPL v2+  
+**Version**: v1.0 (2025)
 
 Most M2x5mm screws should fit fine, although it's best to ensure that the screw head will fit inside the counterbore.
 For reference, [this hex socket head screw](https://www.mcmaster.com/91292A005/) from McMaster-Carr should fit nearly flush (head will protrude above the counterbore by ~0.1 mm).
