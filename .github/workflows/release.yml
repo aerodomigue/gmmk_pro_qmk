@@ -1,0 +1,118 @@
+name: Build and Release QMK Firmware
+
+on:
+  push:
+    tags:
+      - 'V*.*.*'  # Triggers on tags like V1.0.0, V2.1.3, etc.
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Cache pip packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-qmk
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Install QMK CLI
+      run: |
+        python -m pip install --upgrade pip
+        pip install qmk
+
+    - name: Cache QMK Firmware
+      uses: actions/cache@v3
+      with:
+        path: qmk_firmware
+        key: ${{ runner.os }}-qmk-firmware-${{ hashFiles('.github/workflows/release.yml') }}
+        restore-keys: |
+          ${{ runner.os }}-qmk-firmware-
+
+    - name: Clone QMK Firmware
+      run: |
+        if [ ! -d "qmk_firmware" ]; then
+          git clone --depth 1 --recurse-submodules --shallow-submodules https://github.com/qmk/qmk_firmware.git
+        else
+          echo "QMK Firmware already exists, skipping clone"
+        fi
+
+    - name: Setup QMK
+      run: |
+        cd qmk_firmware
+        qmk setup -y
+
+    - name: Copy keymap to QMK
+      run: |
+        # Create the keymap directory structure
+        mkdir -p qmk_firmware/keyboards/gmmk/pro/rev1/ansi/keymaps/gmmk_pro_qmk
+
+        # Copy all keymap files
+        cp config.h qmk_firmware/keyboards/gmmk/pro/rev1/ansi/keymaps/gmmk_pro_qmk/
+        cp rgb_utils.h qmk_firmware/keyboards/gmmk/pro/rev1/ansi/keymaps/gmmk_pro_qmk/
+        cp keymap.c qmk_firmware/keyboards/gmmk/pro/rev1/ansi/keymaps/gmmk_pro_qmk/
+        cp rules.mk qmk_firmware/keyboards/gmmk/pro/rev1/ansi/keymaps/gmmk_pro_qmk/
+        cp README.md qmk_firmware/keyboards/gmmk/pro/rev1/ansi/keymaps/gmmk_pro_qmk/
+
+    - name: Build QMK Firmware
+      run: |
+        cd qmk_firmware
+        qmk compile -kb gmmk/pro/rev1/ansi -km gmmk_pro_qmk
+
+    - name: Prepare release assets
+      run: |
+        # Create release directory
+        mkdir -p release
+
+        # Copy the built firmware
+        cp qmk_firmware/gmmk_pro_rev1_ansi_gmmk_pro_qmk.bin release/
+
+        # Create a zip with the source files
+        zip -r release/gmmk_pro_qmk_source_${GITHUB_REF_NAME}.zip config.h keymap.c rules.mk README.md
+
+        # Rename firmware file to include version
+        mv release/gmmk_pro_rev1_ansi_gmmk_pro_qmk.bin release/gmmk_pro_qmk_${GITHUB_REF_NAME}.bin
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        name: "GMMK Pro QMK Firmware ${{ github.ref_name }}"
+        body: |
+          ## GMMK Pro QMK Firmware Release ${{ github.ref_name }}
+
+          This release contains the compiled firmware for the GMMK Pro keyboard with custom keymap.
+
+          ### Files included:
+          - `gmmk_pro_qmk_${{ github.ref_name }}.bin` - Compiled firmware binary ready to flash
+          - `gmmk_pro_qmk_source_${{ github.ref_name }}.zip` - Source code for this keymap
+
+          ### How to flash:
+          1. Put your GMMK Pro into bootloader mode:
+             - Hold the Reset switch on the bottom of the PCB while connecting USB, or
+             - Hold Escape while connecting USB, or
+             - Press Fn+Backslash if you have QMK already flashed
+          2. Use QMK Toolbox or other flashing tool to flash the `.bin` file
+
+          ### Build command used:
+          ```
+          qmk compile -kb gmmk/pro/rev1/ansi -km gmmk_pro_qmk
+          ```
+
+          For more information, see the [QMK documentation](https://docs.qmk.fm/).
+        files: |
+          release/gmmk_pro_qmk_${{ github.ref_name }}.bin
+          release/gmmk_pro_qmk_source_${{ github.ref_name }}.zip
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
