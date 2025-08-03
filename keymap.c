@@ -63,7 +63,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //Numpad bottom row looks off but is correct
     [1] = LAYOUT(
         FN_SLEP, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, NK_TOGG,          _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_HOME,
         _______, _______, KC_MSTP, _______, _______, KC_P7,   KC_P8,   KC_P9,   _______, _______, _______, _______, _______, QK_BOOT,          _______,
         _______, KC_MPRV, KC_MPLY, KC_MNXT, _______, KC_P4,   KC_P5,   KC_P6,   _______, _______, _______, _______,          _______,          _______,
         _______,          _______, _______, _______, KC_P1,   KC_P2,   KC_P3,   _______, _______, _______, _______,          _______, _______, _______,
@@ -250,9 +250,12 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
             rgb_matrix_set_color(LED_LWIN, RGB_BLUE);
             rgb_matrix_set_color(LED_RSFT, RGB_PINK);
             rgb_matrix_set_color(LED_RCTL, RGB_AZURE);
-            
+
             //Sleep Key
             rgb_matrix_set_color(LED_ESC, RGB_BLUE);
+
+            //Home key (Del)
+            rgb_matrix_set_color(LED_DEL, RGB_CYAN);
 
             //Virtual numpad
             rgb_matrix_set_color(LED_T, RGB_WHITE);
@@ -354,7 +357,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     return false;
                 }
                 else if (get_mods() & MOD_BIT(KC_LSFT)) {
-                    //Toggle RGB on/off     
+                    //Toggle RGB on/off
                     rgb_matrix_toggle();
                     return false;
                 }

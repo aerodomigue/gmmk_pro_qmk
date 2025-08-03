@@ -102,7 +102,7 @@ enum led_location_map {
   LED_F12,  // 66, F12, ka5
   LED_L1,   // 67, LED, l01
   LED_R1,   // 68, LED, l11
-  LED_INS,  // 69, Prt, k97  -- remapped to INS
+  LED_F13,  // 69, Prt, k97  -- remapped to INS
   LED_L2,   // 70, LED, l02
   LED_R2,   // 71, LED, l12
   LED_DEL,  // 72, Del, k65
@@ -197,7 +197,7 @@ const uint8_t LEDS_NOT_SIDE[] = {
     LED_QUOT,
     LED_RCTL,
     LED_F12,
-    LED_INS,
+    LED_F13,
     LED_DEL,
     LED_PGUP,
     LED_EQL,
