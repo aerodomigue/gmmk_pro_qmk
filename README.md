@@ -24,8 +24,14 @@ qmk flash -kb gmmk/pro/rev1/ansi -km v1
 ## Features
 
 ### 🖱️ **macOS Integration**
-- **Sleep Shortcut**: `Fn + Escape` - Instantly puts macOS to sleep using `Cmd+Opt+Eject`
-- Optimized for macOS workflow and system controls
+- **OS-Adaptive Sleep Shortcut**: `Fn + Escape` - Automatically detects OS and uses appropriate sleep command:
+  - **macOS**: `Cmd+Opt+Eject` for instant system sleep
+  - **Windows/Linux**: `KC_SLEP` system sleep key
+- Optimized for cross-platform workflow and system controls
+
+### 🏠 **Navigation Shortcuts**
+- **Home Key**: `Fn + Del` - Quick access to Home key function
+- Perfect for text editing and navigation without leaving home row area
 
 ### ⌨️ **NKRO Toggle**
 - **NKRO Control**: `Fn + Print Screen` - Toggle between N-Key Rollover and 6-Key Rollover
@@ -70,7 +76,7 @@ V B N    →    1 2 3
 ### 🔧 **Function Layer Visual Indicators**
 
 When `Fn` is held, keys light up to show their function:
-- 🔵 **Blue**: Sleep key (Escape)
+- 🔵 **Blue**: Sleep key (Escape) - OS-adaptive sleep command
 - 🟣 **Magenta**: Bootloader key (Backslash)
 - 🔴 **Red**: RGB hue control (Left Shift)
 - 🟢 **Green**: RGB saturation control (Left Ctrl)
@@ -79,6 +85,7 @@ When `Fn` is held, keys light up to show their function:
 - 🔵 **Azure**: Save RGB settings (Right Ctrl)
 - ⚪ **White**: Virtual numpad keys
 - 🟢/🟠 **Green/Orange**: NKRO status (Print Screen)
+- 🔵 **Cyan**: Home key (Del)
 
 ### 🔒 **Caps Lock Indicator**
 - Entire Caps Lock row turns red when Caps Lock is active
@@ -87,16 +94,17 @@ When `Fn` is held, keys light up to show their function:
 
 ### Enabled Features (rules.mk)
 ```makefile
-VIA_ENABLE       = yes    # VIA compatibility for easy remapping
-EXTRAKEY_ENABLE  = yes    # Media keys and system controls
-NKRO_ENABLE      = yes    # N-Key Rollover support
+VIA_ENABLE          = yes    # VIA compatibility for easy remapping
+EXTRAKEY_ENABLE     = yes    # Media keys and system controls
+NKRO_ENABLE         = yes    # N-Key Rollover support
+OS_DETECTION_ENABLE = yes    # Automatic OS detection for adaptive features
 ```
 
 ## Compatibility
 
-- ✅ **macOS**: Full compatibility with sleep function and media keys
-- ✅ **Windows**: Standard functionality
-- ✅ **Linux**: NKRO toggle available for compatibility with systems that don't support N-Key Rollover
+- ✅ **macOS**: Full compatibility with adaptive sleep function and media keys
+- ✅ **Windows**: Full compatibility with system sleep key and standard functions  
+- ✅ **Linux**: Full compatibility with system sleep key and NKRO toggle for enhanced compatibility
 
 ## Bootloader Mode
 
@@ -104,6 +112,19 @@ To reset the board into bootloader mode:
 * `Fn + Backslash` - Software reset to bootloader
 * Hold Reset switch on PCB bottom while connecting USB
 * Hold Escape while connecting USB (erases settings)
+
+## Changelog
+
+### v1.0 (2025)
+- Major refactor of legacy codebase
+- Added OS-adaptive sleep shortcut (Fn + Escape):
+  - macOS: Cmd+Opt+Eject for instant sleep
+  - Windows/Linux: System sleep key (KC_SLEP)
+- Added Home key shortcut (Fn + Del) with cyan visual indicator
+- Added NKRO toggle with visual indicator (Fn + Print Screen)
+- Enhanced RGB lighting controls and visual feedback
+- Improved code organization and documentation
+- Updated copyright and licensing information
 
 ---
 

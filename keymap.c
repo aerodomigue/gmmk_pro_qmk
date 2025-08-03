@@ -372,14 +372,26 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
             case FN_SLEP:
                 if (record->event.pressed) {
-                    // Si Fn est maintenu, on envoie Command + Option + Eject
-                    register_code(KC_LGUI);   // Command (ou GUI)
-                    register_code(KC_LALT);   // Option (ou Alt)
-                    tap_code(KC_EJCT);        // Eject
-                    unregister_code(KC_LALT);
-                    unregister_code(KC_LGUI);
+                    // Detect OS and use appropriate sleep command
+                    switch (detected_host_os()) {
+                        case OS_MACOS:
+                            // macOS: Command + Option + Eject
+                            register_code(KC_LGUI);   // Command (GUI)
+                            register_code(KC_LALT);   // Option (Alt)
+                            tap_code(KC_EJCT);        // Eject
+                            unregister_code(KC_LALT);
+                            unregister_code(KC_LGUI);
+                            break;
+                        case OS_WINDOWS:
+                        case OS_LINUX:
+                        default:
+                            // Windows/Linux: Use system sleep key
+                            tap_code(KC_SLEP);
+                            break;
+                    }
                 }
-                return false; // Empêche l'envoi d'un code supplémentaire
+                return false; // Prevent sending additional codes
+
 
 
         default:
