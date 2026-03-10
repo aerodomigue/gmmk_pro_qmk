@@ -96,6 +96,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 
 
+// Wake host callback — sends F24 (no-op on all OSes) to wake PC from light sleep (e.g. after KVM switch)
+uint32_t wake_host_callback(uint32_t trigger_time, void *cb_arg) {
+    tap_code_delay(KC_F19, 50);
+    tap_code_delay(KC_F19, 50);
+    tap_code_delay(KC_F19, 50);
+    return 0; // don't repeat
+}
+
 //Set power-up defaults for lighting
 void keyboard_post_init_user(void) {
     //Initialize default user-configurable HSV values
@@ -109,6 +117,9 @@ void keyboard_post_init_user(void) {
 
     //Set the default lighting mode for the keyboard when it powers up. See rgb_utils.h for all lighting modes available
     LIGHTING_MODE = QMK_FANCY_ALL;
+
+    // Send F24 after 500ms to wake host from light sleep (useful after KVM switch)
+    defer_exec(500, wake_host_callback, NULL);
 }
 
 //Write current QMK RGB settings to EEPROM
